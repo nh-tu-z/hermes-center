@@ -1,4 +1,7 @@
-﻿namespace MyFirstCoreApp
+﻿using System.Diagnostics;
+using System.Text.Json;
+
+namespace MyFirstCoreApp
 {
     public class Startup
     {
@@ -15,14 +18,30 @@
 
         public Startup(IWebHostEnvironment env)
         {
-            Env = env;
-            Configuration = GetBuilder().Build();
+            #region Debug
+            // cofig log in output tab for tracing
+            Debug.IndentLevel = 3;
+            Debug.WriteLine("StartUp");
+            #endregion
+
+            Env = env; // Microsoft.AspNetCore.Hosting.HostingEnvironment
+            Configuration = GetBuilder().Build(); // Microsoft.Extensions.Configuration.ConfigurationRoot
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services
+                .AddControllersWithViews()
+                .AddJsonOptions(options =>
+                {
+                    options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+                    options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+                });
 
+            services.AddRouting(options => options.LowercaseUrls = true);
+
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -31,6 +50,11 @@
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+            }
+            else
+            {
+                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+                app.UseHsts();
             }
 
             app.Run(async (context) =>
