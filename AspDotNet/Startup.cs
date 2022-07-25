@@ -32,6 +32,8 @@ namespace MyFirstCoreApp
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            AddSwagger(services);
+
             services
                 .AddControllersWithViews()
                 .AddJsonOptions(options =>
@@ -44,12 +46,15 @@ namespace MyFirstCoreApp
 
             services
                 .AddLogger(Configuration, Env)
-                .AddApiVersioningService();
+                .AddApiVersioningService()
+                .AddServiceConfigurations(Configuration)
+                .AddBackgroundServices();
 
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        // Ref - https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.builder.applicationbuilder?view=aspnetcore-6.0
+        public void Configure(IApplicationBuilder app /* Microsoft.AspNetCore.Builder.ApplicationBuilder */, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
@@ -61,9 +66,19 @@ namespace MyFirstCoreApp
                 app.UseHsts();
             }
 
-            app.Run(async (context) =>
+            app.UseHttpsRedirection();
+            app.UseStaticFiles();
+            app.UseRouting();
+            app.UseAuthentication();
+            app.UseAuthentication();
+            app.UseSwagger();
+            app.UseSwaggerUI(c => { c.SwaggerEndpoint("swagger/v1/swagger.json", $"{_appName} {_version}"); });
+
+            app.UseEndpoints(endpoints =>
             {
-                await context.Response.WriteAsync("Hello World!");
+                endpoints.MapControllerRoute(
+                    name: "default",
+                    pattern: "{controller}/{action=Index}/{id?}");
             });
         }
 
@@ -79,6 +94,14 @@ namespace MyFirstCoreApp
                 .AddEnvironmentVariables();
 
             return config;
+        }
+
+        private static void AddSwagger(IServiceCollection services)
+        {
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc(_version, new Microsoft.OpenApi.Models.OpenApiInfo() { Title = _appName, Version = _version });
+            });
         }
     }
 }

@@ -25,6 +25,12 @@ namespace HermesCenter.Services
 				config.AssumeDefaultVersionWhenUnspecified = true;
 				config.ReportApiVersions = true;
 			});
+
+		public static IServiceCollection AddServiceConfigurations(this IServiceCollection services, IConfiguration configuration) =>
+			services; /* use .Configure<T>(config.GetSection(nameof(T) */
+
+		public static IServiceCollection AddBackgroundServices(this IServiceCollection services) =>
+			services; /* use AddHostedService<T>() to add a background service */
 	}
 }
 
