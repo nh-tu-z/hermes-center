@@ -1,5 +1,6 @@
-﻿using HermesCenter.Logger;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using HermesCenter.Logger;
+using HermesCenter.BackgroundServices;
 
 namespace HermesCenter.Services
 {
@@ -30,7 +31,8 @@ namespace HermesCenter.Services
 			services; /* use .Configure<T>(config.GetSection(nameof(T) */
 
 		public static IServiceCollection AddBackgroundServices(this IServiceCollection services) =>
-			services; /* use AddHostedService<T>() to add a background service */
+			services
+				.AddHostedService<WebSocketService>();
 	}
 }
 
