@@ -1,4 +1,4 @@
-﻿using System;
+﻿using HermesCenter.Logger;
 
 namespace HermesCenter.Services
 {
@@ -9,10 +9,12 @@ namespace HermesCenter.Services
 			return services;
 		}
 
-		public static IServiceCollection AddLogger(this IServiceCollection services, IConfiguration configuration, IWebHostEnvironment Env)
+		public static IServiceCollection AddLogger(this IServiceCollection services, IConfiguration configuration, IWebHostEnvironment env)
 		{
-
-			return services;
+			Logger.Environment logEnv = env.IsDevelopment()
+				? Logger.Environment.Development
+				: Logger.Environment.Production;
+			return services.AddSingleton<ILogManager>(_ => new LogManager(logEnv));
 		}
 	}
 }

@@ -9,7 +9,7 @@ namespace HermesCenter.Logger
     {
         private readonly Serilog.ILogger _logger;
 
-        public LogManager(Environment env, string instrumentationKey)
+        public LogManager(Environment env, string instrumentationKey = "" /* implement with ApplicationInsight */)
         {
             var loggerConfiguration = new LoggerConfiguration()
                 .MinimumLevel.Debug()
@@ -19,11 +19,11 @@ namespace HermesCenter.Logger
 
             if(env == Environment.Development)
             {
-                //
+                loggerConfiguration.WriteTo.Debug();
             }
             else
             {
-                // TODO - it might be added to AppicationInsight Azure when it is in production
+                // TODO - it might be added to AppicationInsight Azure (another sink) when it is in production
             }
 
             _logger = loggerConfiguration.CreateLogger();
@@ -31,12 +31,14 @@ namespace HermesCenter.Logger
 
         public void Error(Exception ex, string message, string prefix = "")
         {
-
+            string msg = (prefix != string.Empty) ? $"[{prefix}] {message}" : message;
+            _logger.Error(ex, msg);
         }
 
         public void Error(string message, string prefix = "")
         {
-
+            string msg = (prefix != string.Empty) ? $"[{prefix}] {message}" : message;
+            _logger.Error(msg);
         }
 
         public void Error(Exception ex, string template, params object[] protertyValues)
@@ -46,12 +48,13 @@ namespace HermesCenter.Logger
 
         public void Information(string message, string prefix = "")
         {
-
+            string msg = (prefix != string.Empty) ? $"[{prefix}] {message}" : message;
+            _logger.Information(msg);
         }
 
         public void Information(string template, params object[] protertyValues)
         {
-
+            _logger.Information(template, protertyValues);
         }
 
         public void Warning(string template, params object[] protertyValues)

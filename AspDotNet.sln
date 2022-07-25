@@ -5,11 +5,6 @@ VisualStudioVersion = 17.2.32616.157
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AspDotNet", "AspDotNet\AspDotNet.csproj", "{D1B8E23C-6D5C-4DA9-B19F-F1A0B4FC25D1}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{642CBD11-54E7-46C0-9119-47666F76167A}"
-	ProjectSection(SolutionItems) = preProject
-		ServiceRegistrar.cs = ServiceRegistrar.cs
-	EndProjectSection
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
