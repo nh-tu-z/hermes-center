@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Text.Json;
+using HermesCenter.Services;
 
 namespace MyFirstCoreApp
 {
@@ -41,7 +42,10 @@ namespace MyFirstCoreApp
 
             services.AddRouting(options => options.LowercaseUrls = true);
 
-            
+            services
+                .AddLogger(Configuration, Env)
+                .AddApiVersioningService();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

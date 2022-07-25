@@ -1,4 +1,5 @@
 ﻿using HermesCenter.Logger;
+using Microsoft.AspNetCore.Mvc;
 
 namespace HermesCenter.Services
 {
@@ -16,6 +17,14 @@ namespace HermesCenter.Services
 				: Logger.Environment.Production;
 			return services.AddSingleton<ILogManager>(_ => new LogManager(logEnv));
 		}
+
+		public static IServiceCollection AddApiVersioningService(this IServiceCollection services) =>
+			services.AddApiVersioning(config =>
+			{
+				config.DefaultApiVersion = new ApiVersion(1, 0);
+				config.AssumeDefaultVersionWhenUnspecified = true;
+				config.ReportApiVersions = true;
+			});
 	}
 }
 
