@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using HermesCenter.Logger;
 using HermesCenter.BackgroundServices;
+using HermesCenter.AssetDiscovery;
 
 namespace HermesCenter.Services
 {
@@ -8,6 +9,8 @@ namespace HermesCenter.Services
 	{
 		public static IServiceCollection AddServices(this IServiceCollection services, IConfiguration configuration)
 		{
+			services
+				.AddSingleton<IMLConnector, AzureMLConnector>();
 			return services;
 		}
 
