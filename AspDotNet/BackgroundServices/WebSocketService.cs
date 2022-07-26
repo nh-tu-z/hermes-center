@@ -4,13 +4,13 @@ using HermesCenter.Logger;
 
 namespace HermesCenter.BackgroundServices
 {
-    /*
-        Ref for backgroud services: https://docs.microsoft.com/en-us/aspnet/core/fundamentals/host/hosted-services?view=aspnetcore-6.0&tabs=visual-studio 
-        This implementation hosts service that activates a scoped service. The scope service ca use dependency injection (DI)
-        
-        WebSocket Serive uses WebSocket protocol to listen a configured socket and receive messege. 
-        The message will be processed and executed for specific perpose. i.e. TODO - add information about primitive project
-     */
+    /// <summary>
+    /// Ref for backgroud services: https://docs.microsoft.com/en-us/aspnet/core/fundamentals/host/hosted-services?view=aspnetcore-6.0&tabs=visual-studio 
+    /// This implementation hosts service that activates a scoped service. The scope service ca use dependency injection (DI)
+    /// 
+    /// WebSocket Serive uses WebSocket protocol to listen a configured socket and receive messege. 
+    /// The message will be processed and executed for specific perpose. i.e. TODO - add information about primitive project
+    /// </summary>
     public class WebSocketService : BackgroundService
     {
         private readonly ILogManager _logManager;
