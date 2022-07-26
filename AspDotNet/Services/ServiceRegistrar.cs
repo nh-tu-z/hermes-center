@@ -33,7 +33,8 @@ namespace HermesCenter.Services
 		public static IServiceCollection AddBackgroundServices(this IServiceCollection services) =>
 			services
 				.AddHostedService<WebSocketService>()
-				.AddHostedService<QueueManagerService>();
+				.AddHostedService<QueueManagerService>()
+				.AddHostedService<SyncAssetService>();
 	}
 }
 
