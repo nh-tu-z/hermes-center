@@ -1,4 +1,5 @@
-﻿using StackExchange.Redis;
+﻿using Hangfire;
+using StackExchange.Redis;
 using HermesCenter.Logger;
 
 namespace HermesCenter.AssetDiscovery
@@ -9,13 +10,21 @@ namespace HermesCenter.AssetDiscovery
         private readonly IMLConnector _connector;
         private readonly IServiceProvider _serviceProvider;
         private readonly ConnectionMultiplexer redis;
+        private readonly IBackgroundJobClient _backgroundJobClient;
+        private readonly IRecurringJobManager _recurringJobManager;
 
-        public AssetDiscoveryEngine(ILogManager logManager, IMLConnector connector, IServiceProvider serviceProvider)
+        public AssetDiscoveryEngine(ILogManager logManager, 
+            IMLConnector connector,
+            IServiceProvider serviceProvider,
+            IRecurringJobManager recurringJobManager,
+            IBackgroundJobClient backgroundJobClient)
         {
             _logManager = logManager;
             _connector = connector;
             _serviceProvider = serviceProvider;
             redis = ConnectionMultiplexer.Connect("localhost");
+            _recurringJobManager = recurringJobManager;
+            _backgroundJobClient = backgroundJobClient;
         }
 
         public void Start()
@@ -46,20 +55,25 @@ namespace HermesCenter.AssetDiscovery
             // Check run once or always
             if (job.Trigger.Frequency == TriggerFrequency.Always)
             {
-                //_backgroundJobClient.Enqueue(() => RunInitializeJob(job.Id));
+                _backgroundJobClient.Enqueue(() => RunInitialJob(job.Id));
             }
             else if (job.Trigger.Frequency == TriggerFrequency.Once)
             {
-                //if (!IsRun(job.Id))
-                //{
-                //    _backgroundJobClient.Enqueue(() => RunInitializeJob(job.Id));
-                //}
+                if (!IsRun(job.Id))
+                {
+                    _backgroundJobClient.Enqueue(() => RunInitialJob(job.Id));
+                }
             }
         }
 
         private void HandleScheduleJob(IMLJob job)
         {
-
+            // Add a schedule
+            _recurringJobManager.AddOrUpdate(
+                job.Id,
+                () => RunScheduledJob(job.Id),
+                job.Trigger.Schedule
+                );
         }
 
         private void HandleEventJob(IMLJob job)
@@ -67,7 +81,12 @@ namespace HermesCenter.AssetDiscovery
 
         }
 
-        public void RunInitialJob()
+        public void RunInitialJob(string jobId)
+        {
+
+        }
+
+        public void RunScheduledJob(string jobId)
         {
 
         }
@@ -75,6 +94,11 @@ namespace HermesCenter.AssetDiscovery
         public void RunJob(string jobId, object input)
         {
 
+        }
+
+        private bool IsRun(string jobId)
+        {
+            return true;
         }
     }
 }
