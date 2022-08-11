@@ -45,6 +45,7 @@ namespace MyFirstCoreApp
             services.AddRouting(options => options.LowercaseUrls = true);
 
             services
+                .AddServices(Configuration)
                 .AddLogger(Configuration, Env)
                 .AddApiVersioningService()
                 .AddServiceConfigurations(Configuration)
@@ -72,7 +73,7 @@ namespace MyFirstCoreApp
             app.UseAuthentication();
             app.UseAuthentication();
             app.UseSwagger();
-            app.UseSwaggerUI(c => { c.SwaggerEndpoint("swagger/v1/swagger.json", $"{_appName} {_version}"); });
+            app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", $"{_appName} {_version}"); });
 
             app.UseEndpoints(endpoints =>
             {
