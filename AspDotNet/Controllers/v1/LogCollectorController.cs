@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Azure.Security.KeyVault.Secrets;
 using HermesCenter.Interfaces;
 using HermesCenter.Models;
 using HermesCenter.General.Events;
@@ -11,9 +12,12 @@ namespace HermesCenter.Controllers.v1
     public class LogCollectorController : ControllerBase
     {
         private readonly IIntegrationService _integrationService;
-        public LogCollectorController(IIntegrationService integrationService)
+        private readonly SecretClient _secretClient;
+
+        public LogCollectorController(IIntegrationService integrationService, SecretClient secretClient)
         {
             _integrationService = integrationService ?? throw new ArgumentException(nameof(integrationService));
+            _secretClient = secretClient ?? throw new ArgumentException(nameof(secretClient));
         }
 
         /// <summary>
@@ -59,9 +63,9 @@ namespace HermesCenter.Controllers.v1
         [HttpGet("key/{id}")]
         public async Task<IActionResult> GetKeyVaultByIdAsync(string id)
         {
-            //var secretKeyVault = await _secretClient.GetSecretAsync(id);
+            var secretKeyVault = await _secretClient.GetSecretAsync(id);
 
-            return Ok();
+            return Ok(secretKeyVault.Value.Value);
         }
     }
 }
