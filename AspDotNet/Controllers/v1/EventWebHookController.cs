@@ -5,6 +5,7 @@ using Newtonsoft.Json.Linq;
 using Microsoft.AspNetCore.SignalR;
 using HermesCenter.Logger;
 using HermesCenter.Models.Hubs;
+using HermesCenter.Interfaces;
 
 namespace HermesCenter.Controllers.v1
 {
@@ -23,11 +24,13 @@ namespace HermesCenter.Controllers.v1
 
         private readonly ILogManager _logManager;
         private readonly IHubContext<GridEventsHub> _hubContext;
+        private readonly IRedisQueueService _redisQueueService;
 
-        public EventWebHookController(ILogManager logManager, IHubContext<GridEventsHub> gridEventsHubContext)
+        public EventWebHookController(IRedisQueueService redisQueueService, ILogManager logManager, IHubContext<GridEventsHub> gridEventsHubContext)
         {
             _logManager = logManager ?? throw new ArgumentNullException(nameof(logManager));
             _hubContext = gridEventsHubContext;
+            _redisQueueService = redisQueueService;
         }
 
         [HttpOptions]
@@ -59,7 +62,7 @@ namespace HermesCenter.Controllers.v1
             }
 
             //TODO format message
-            //await _redisQueueService.InsertMessageAsync(jsonContent);
+            await _redisQueueService.InsertMessageAsync(jsonContent);
 
             // Check the event type. Return the validation code if it's a subscription validation request. 
             if (EventTypeSubcriptionValidation)
