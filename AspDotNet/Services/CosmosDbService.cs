@@ -39,6 +39,19 @@ namespace HermesCenter.Services
             return response.Resource;
         }
 
+        public async Task<IEnumerable<T>> GetMultipleAsync<T>(string queryString, string containerName = null) where T : class
+        {
+            var query = GetContainer(containerName).GetItemQueryIterator<T>(new QueryDefinition(queryString));
+            var results = new List<T>();
+            while (query.HasMoreResults)
+            {
+                var response = await query.ReadNextAsync();
+                results.AddRange(response.ToList());
+            }
+
+            return results;
+        }
+
         private Container GetContainer(string containerName)
         {
             return (containerName == null) ? _container : _cosmosDbClient.GetContainer(_databaseName, containerName);

@@ -19,5 +19,13 @@
             public const string FailedCount = "failedCount";
             public const string Message = "message";
         }
+
+        public static class AzureEvent
+        {
+            public const string Add = "Created";
+            public const string Update = "Updated";
+            public const string Delete = "Deleted";
+            public const string RunStatusChanged = "RunStatusChanged";
+        }
     }
 }
