@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Text.Json;
 using HermesCenter.Services;
+using HermesCenter.Models.Hubs;
 
 namespace MyFirstCoreApp
 {
@@ -43,6 +44,7 @@ namespace MyFirstCoreApp
                 });
 
             services.AddRouting(options => options.LowercaseUrls = true);
+            services.AddSignalR();
 
             services
                 .AddServices(Configuration)
@@ -77,6 +79,7 @@ namespace MyFirstCoreApp
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapHub<GridEventsHub>("/hubs/gridevents");
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller}/{action=Index}/{id?}");
