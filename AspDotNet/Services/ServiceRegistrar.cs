@@ -37,7 +37,8 @@ namespace HermesCenter.Services
 
 		public static IServiceCollection AddServiceConfigurations(this IServiceCollection services, IConfiguration configuration) =>
 			services
-				.Configure<QueueConfig>(configuration.GetSection(nameof(QueueConfig)));
+				.Configure<QueueConfig>(configuration.GetSection(nameof(QueueConfig)))
+				.Configure<ApiManagementConfig>(configuration.GetSection(nameof(ApiManagementConfig)));
 
 		public static IServiceCollection AddBackgroundServices(this IServiceCollection services) =>
 			services
