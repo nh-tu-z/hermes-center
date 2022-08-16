@@ -52,6 +52,12 @@ namespace HermesCenter.Services
             return results;
         }
 
+        public async Task<T> UpdateAsync<T>(T entity, string id, string containerName = null) where T : class
+        {
+            var response = await GetContainer(containerName).UpsertItemAsync(entity, new PartitionKey(id));
+            return response.Resource;
+        }
+
         private Container GetContainer(string containerName)
         {
             return (containerName == null) ? _container : _cosmosDbClient.GetContainer(_databaseName, containerName);
